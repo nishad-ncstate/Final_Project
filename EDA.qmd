@@ -59,3 +59,4 @@ ggplot(data, aes(x = factor(HighBP), fill = factor(Diabetes_binary))) +
 
 ```
 
+Click here for the modeling page

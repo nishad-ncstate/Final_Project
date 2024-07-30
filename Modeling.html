@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploratory Data Analysis of Diabetes Health Indicators</title>
+<title>Modeling Diabetes Health Indicators</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,16 +57,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="EDA_files/libs/clipboard/clipboard.min.js"></script>
-<script src="EDA_files/libs/quarto-html/quarto.js"></script>
-<script src="EDA_files/libs/quarto-html/popper.min.js"></script>
-<script src="EDA_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="EDA_files/libs/quarto-html/anchor.min.js"></script>
-<link href="EDA_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="EDA_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="EDA_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="EDA_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="EDA_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Modeling_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Modeling_files/libs/quarto-html/quarto.js"></script>
+<script src="Modeling_files/libs/quarto-html/popper.min.js"></script>
+<script src="Modeling_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Modeling_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Modeling_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Modeling_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Modeling_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Modeling_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Modeling_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Exploratory Data Analysis of Diabetes Health Indicators</h1>
+<h1 class="title">Modeling Diabetes Health Indicators</h1>
 </div>
 
 
@@ -98,11 +98,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This analysis aims to explore the Diabetes Health Indicators dataset to understand the relationships between various health indicators and the presence of diabetes. The ultimate goal is to use these insights to build predictive models.</p>
+<p>In this section, we will build and evaluate predictive models to classify individuals based on the Diabetes Health Indicators dataset.</p>
 </section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<p>Let’s load the dataset and perform initial exploration.</p>
+<section id="data-split" class="level2">
+<h2 class="anchored" data-anchor-id="data-split">Data Split</h2>
+<p>First, we split the data into training and testing sets.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -124,125 +124,210 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of the dataset</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'randomForest' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>randomForest 4.7-1.1
+Type rfNews() to see new features/changes/bug fixes.
+
+Attaching package: 'randomForest'
+
+The following object is masked from 'package:dplyr':
+
+    combine
+
+The following object is masked from 'package:ggplot2':
+
+    margin</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'caret' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice
+
+Attaching package: 'caret'
+
+The following object is masked from 'package:purrr':
+
+    lift</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ranger' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ranger'
+
+The following object is masked from 'package:randomForest':
+
+    importance</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Diabetes_binary to a factor with appropriate levels</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Diabetes_binary <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>Diabetes_binary, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(data<span class="sc">$</span>Diabetes_binary, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data[train_index, ]</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="logistic-regression" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-regression">Logistic Regression</h2>
+<p>Logistic regression is a statistical model that is used to predict the probability of a binary outcome based on one or more predictor variables. It is particularly useful for binary classification problems, like predicting whether an individual has diabetes (Yes/No) based on various health indicators. The model estimates the probability that a given input point belongs to a specific class. This is done using the logistic function, which outputs a value between 0 and 1.</p>
+<p>Let’s train and evaluate a logistic regression model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Logistic Regression model</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>log_reg_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">5</span>, <span class="at">summaryFunction =</span> mnLogLoss, <span class="at">classProbs =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in train.default(x, y, weights = w, ...): The metric "Accuracy" was not
+in the result set. logLoss will be used instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model performance</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>log_reg_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Diabetes_binary HighBP HighChol CholCheck BMI Smoker Stroke
-1               0      1        1         1  40      1      0
-2               0      0        0         0  25      1      0
-3               0      1        1         1  28      0      0
-4               0      1        0         1  27      0      0
-5               0      1        1         1  24      0      0
-6               0      1        1         1  25      1      0
-  HeartDiseaseorAttack PhysActivity Fruits Veggies HvyAlcoholConsump
-1                    0            0      0       1                 0
-2                    0            1      0       0                 0
-3                    0            0      1       0                 0
-4                    0            1      1       1                 0
-5                    0            1      1       1                 0
-6                    0            1      1       1                 0
-  AnyHealthcare NoDocbcCost GenHlth MentHlth PhysHlth DiffWalk Sex Age
-1             1           0       5       18       15        1   0   9
-2             0           1       3        0        0        0   0   7
-3             1           1       5       30       30        1   0   9
-4             1           0       2        0        0        0   0  11
-5             1           0       2        3        0        0   0  11
-6             1           0       2        0        2        0   1  10
-  Education Income
-1         4      3
-2         6      1
-3         4      8
-4         3      6
-5         5      4
-6         6      8</code></pre>
+<pre><code>Generalized Linear Model 
+
+177577 samples
+    21 predictor
+     2 classes: 'No', 'Yes' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 142061, 142061, 142061, 142062, 142063 
+Resampling results:
+
+  logLoss  
+  0.3209772</code></pre>
 </div>
 </div>
 </section>
-<section id="data-cleaning-and-transformation" class="level2">
-<h2 class="anchored" data-anchor-id="data-cleaning-and-transformation">Data Cleaning and Transformation</h2>
-<p>We need to clean and transform the data for our analysis.</p>
+<section id="classification-tree" class="level2">
+<h2 class="anchored" data-anchor-id="classification-tree">Classification Tree</h2>
+<p>A classification tree is a type of decision tree that is used for classifying data into predefined classes. It works by splitting the data into subsets based on the value of input features, creating a tree-like model of decisions. Classification trees are easy to interpret and can handle both numerical and categorical data. They are useful for understanding the relationships between features and the target variable.</p>
+<p>Let’s train and evaluate a classification tree model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert relevant columns to factors</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), as.factor))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for missing values</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Classification Tree model</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>tree_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">method =</span> <span class="st">"rpart"</span>, <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">5</span>, <span class="at">summaryFunction =</span> mnLogLoss, <span class="at">classProbs =</span> <span class="cn">TRUE</span>), <span class="at">tuneGrid =</span> <span class="fu">expand.grid</span>(<span class="at">cp =</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="at">by =</span> <span class="fl">0.01</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in train.default(x, y, weights = w, ...): The metric "Accuracy" was not
+in the result set. logLoss will be used instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model performance</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>tree_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
+<pre><code>CART 
+
+177577 samples
+    21 predictor
+     2 classes: 'No', 'Yes' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 142062, 142062, 142062, 142061, 142061 
+Resampling results across tuning parameters:
+
+  cp    logLoss  
+  0.01  0.4037576
+  0.02  0.4037576
+  0.03  0.4037576
+  0.04  0.4037576
+  0.05  0.4037576
+  0.06  0.4037576
+  0.07  0.4037576
+  0.08  0.4037576
+  0.09  0.4037576
+  0.10  0.4037576
+
+logLoss was used to select the optimal model using the smallest value.
+The final value used for the model was cp = 0.1.</code></pre>
 </div>
 </div>
 </section>
-<section id="summary-statistics" class="level2">
-<h2 class="anchored" data-anchor-id="summary-statistics">Summary Statistics</h2>
-<p>Let’s generate summary statistics for the dataset.</p>
+<section id="random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="random-forest">Random Forest</h2>
+<p>A Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees. Random Forests correct for decision trees’ habit of overfitting to their training set. They are robust and provide good performance on various types of data.</p>
+<p>Let’s train and evaluate a random forest model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for the dataset</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the number of trees and limit mtry</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>tune_grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.mtry =</span> <span class="fu">sqrt</span>(<span class="fu">ncol</span>(train_data) <span class="sc">-</span> <span class="dv">1</span>), <span class="co"># Typically used heuristic</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.splitrule =</span> <span class="st">"gini"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.min.node.size =</span> <span class="dv">5</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Random Forest model using ranger</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  Diabetes_binary <span class="sc">~</span> ., </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data, </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"ranger"</span>, </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">5</span>, <span class="at">summaryFunction =</span> mnLogLoss, <span class="at">classProbs =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneGrid =</span> tune_grid,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.trees =</span> <span class="dv">4</span> <span class="co"># Reduce the number of trees</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in train.default(x, y, weights = w, ...): The metric "Accuracy" was not
+in the result set. logLoss will be used instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model performance</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>rf_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> Diabetes_binary HighBP     HighChol   CholCheck       BMI         Smoker    
- 0:218334        0:144851   0:146089   0:  9470   27     : 24606   0:141257  
- 1: 35346        1:108829   1:107591   1:244210   26     : 20562   1:112423  
-                                                  24     : 19550             
-                                                  25     : 17146             
-                                                  28     : 16545             
-                                                  23     : 15610             
-                                                  (Other):139661             
- Stroke     HeartDiseaseorAttack PhysActivity Fruits     Veggies   
- 0:243388   0:229787             0: 61760     0: 92782   0: 47839  
- 1: 10292   1: 23893             1:191920     1:160898   1:205841  
-                                                                   
-                                                                   
-                                                                   
-                                                                   
-                                                                   
- HvyAlcoholConsump AnyHealthcare NoDocbcCost GenHlth      MentHlth     
- 0:239424          0: 12417      0:232326    1:45299   0      :175680  
- 1: 14256          1:241263      1: 21354    2:89084   2      : 13054  
-                                             3:75646   30     : 12088  
-                                             4:31570   5      :  9030  
-                                             5:12081   1      :  8538  
-                                                       3      :  7381  
-                                                       (Other): 27909  
-    PhysHlth      DiffWalk   Sex             Age        Education 
- 0      :160052   0:211005   0:141974   9      :33244   1:   174  
- 30     : 19400   1: 42675   1:111706   10     :32194   2:  4043  
- 2      : 14764                         8      :30832   3:  9478  
- 1      : 11388                         7      :26314   4: 62750  
- 3      :  8495                         11     :23533   5: 69910  
- 5      :  7622                         6      :19819   6:107325  
- (Other): 31959                         (Other):87744             
-     Income     
- 8      :90385  
- 7      :43219  
- 6      :36470  
- 5      :25883  
- 4      :20135  
- 3      :15994  
- (Other):21594  </code></pre>
+<pre><code>Random Forest 
+
+177577 samples
+    21 predictor
+     2 classes: 'No', 'Yes' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 142061, 142061, 142063, 142062, 142061 
+Resampling results:
+
+  logLoss  
+  0.7137499
+
+Tuning parameter 'mtry' was held constant at a value of 4.582576
+
+Tuning parameter 'splitrule' was held constant at a value of gini
+
+Tuning parameter 'min.node.size' was held constant at a value of 5</code></pre>
 </div>
 </div>
 </section>
-<section id="visualizations" class="level2">
-<h2 class="anchored" data-anchor-id="visualizations">Visualizations</h2>
-<p>Let’s create some visualizations to understand the relationships between variables.</p>
+<section id="final-model-selection" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-selection">Final Model Selection</h2>
+<p>Compare all three models and select the best one.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example visualization</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(HighBP), <span class="at">fill =</span> <span class="fu">factor</span>(Diabetes_binary))) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"High Blood Pressure vs Diabetes"</span>, <span class="at">x =</span> <span class="st">"High Blood Pressure"</span>, <span class="at">y =</span> <span class="st">"Count"</span>, <span class="at">fill =</span> <span class="st">"Diabetes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="EDA_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare models</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">resamples</span>(<span class="fu">list</span>(<span class="at">Logistic =</span> log_reg_model, <span class="at">Tree =</span> tree_model, <span class="at">RF =</span> rf_model))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+summary.resamples(object = results)
+
+Models: Logistic, Tree, RF 
+Number of resamples: 5 
+
+logLoss 
+              Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+Logistic 0.3202558 0.3202570 0.3208639 0.3209772 0.3212443 0.3222652    0
+Tree     0.4037297 0.4037297 0.4037739 0.4037576 0.4037739 0.4037810    0
+RF       0.6642574 0.7130375 0.7168601 0.7137499 0.7228428 0.7517514    0</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the best model</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>best_model <span class="ot">&lt;-</span> rf_model <span class="co"># Assuming Random Forest is the best based on the summary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>Click here for the modeling page</p>
 </section>
 
 </main>
