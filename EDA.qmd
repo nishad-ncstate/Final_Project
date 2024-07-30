@@ -1,0 +1,61 @@
+---
+title: "Exploratory Data Analysis of Diabetes Health Indicators"
+format: html
+---
+
+## Introduction
+
+This analysis aims to explore the Diabetes Health Indicators dataset to understand the relationships between various health indicators and the presence of diabetes. The ultimate goal is to use these insights to build predictive models.
+
+## Data
+
+Let's load the dataset and perform initial exploration.
+
+```{r}
+# Load the necessary libraries
+library(tidyverse)
+
+# Load the dataset
+data <- read.csv("C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv")
+
+# Display the first few rows of the dataset
+head(data)
+
+```
+
+## Data Cleaning and Transformation
+
+We need to clean and transform the data for our analysis.
+
+```{r}
+# Convert relevant columns to factors
+data <- data %>%
+  mutate(across(where(is.numeric), as.factor))
+
+# Check for missing values
+sum(is.na(data))
+
+```
+
+## Summary Statistics
+
+Let's generate summary statistics for the dataset.
+
+```{r}
+# Summary statistics for the dataset
+summary(data)
+
+```
+
+## Visualizations
+
+Let's create some visualizations to understand the relationships between variables.
+
+```{r}
+# Example visualization
+ggplot(data, aes(x = factor(HighBP), fill = factor(Diabetes_binary))) +
+  geom_bar(position = "dodge") +
+  labs(title = "High Blood Pressure vs Diabetes", x = "High Blood Pressure", y = "Count", fill = "Diabetes")
+
+```
+
