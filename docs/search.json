@@ -40,5 +40,54 @@
     "title": "Exploratory Data Analysis of Diabetes Health Indicators",
     "section": "Visualizations",
     "text": "Visualizations\nLet’s create some visualizations to understand the relationships between variables.\n\n# Example visualization\nggplot(data, aes(x = factor(HighBP), fill = factor(Diabetes_binary))) +\n  geom_bar(position = \"dodge\") +\n  labs(title = \"High Blood Pressure vs Diabetes\", x = \"High Blood Pressure\", y = \"Count\", fill = \"Diabetes\")\n\n\n\n\n\n\n\n\nClick here for the modeling page"
+  },
+  {
+    "objectID": "Modeling.html",
+    "href": "Modeling.html",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "",
+    "text": "In this section, we will build and evaluate predictive models to classify individuals based on the Diabetes Health Indicators dataset."
+  },
+  {
+    "objectID": "Modeling.html#introduction",
+    "href": "Modeling.html#introduction",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "",
+    "text": "In this section, we will build and evaluate predictive models to classify individuals based on the Diabetes Health Indicators dataset."
+  },
+  {
+    "objectID": "Modeling.html#data-split",
+    "href": "Modeling.html#data-split",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Data Split",
+    "text": "Data Split\nFirst, we split the data into training and testing sets.\n\n# Load the necessary libraries\nlibrary(tidyverse)\n\nWarning: package 'ggplot2' was built under R version 4.4.1\n\n\nWarning: package 'dplyr' was built under R version 4.4.1\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(randomForest)\n\nWarning: package 'randomForest' was built under R version 4.4.1\n\n\nrandomForest 4.7-1.1\nType rfNews() to see new features/changes/bug fixes.\n\nAttaching package: 'randomForest'\n\nThe following object is masked from 'package:dplyr':\n\n    combine\n\nThe following object is masked from 'package:ggplot2':\n\n    margin\n\nlibrary(caret)\n\nWarning: package 'caret' was built under R version 4.4.1\n\n\nLoading required package: lattice\n\nAttaching package: 'caret'\n\nThe following object is masked from 'package:purrr':\n\n    lift\n\nlibrary(ranger)\n\nWarning: package 'ranger' was built under R version 4.4.1\n\n\n\nAttaching package: 'ranger'\n\nThe following object is masked from 'package:randomForest':\n\n    importance\n\n# Load the dataset\ndata &lt;- read.csv(\"C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv\")\n\n# Convert Diabetes_binary to a factor with appropriate levels\ndata$Diabetes_binary &lt;- factor(data$Diabetes_binary, levels = c(0, 1), labels = c(\"No\", \"Yes\"))\n\n# Set seed for reproducibility\nset.seed(123)\n\n# Split the data\ntrain_index &lt;- createDataPartition(data$Diabetes_binary, p = 0.7, list = FALSE)\ntrain_data &lt;- data[train_index, ]\ntest_data &lt;- data[-train_index, ]"
+  },
+  {
+    "objectID": "Modeling.html#logistic-regression",
+    "href": "Modeling.html#logistic-regression",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Logistic Regression",
+    "text": "Logistic Regression\nLogistic regression is a statistical model that is used to predict the probability of a binary outcome based on one or more predictor variables. It is particularly useful for binary classification problems, like predicting whether an individual has diabetes (Yes/No) based on various health indicators. The model estimates the probability that a given input point belongs to a specific class. This is done using the logistic function, which outputs a value between 0 and 1.\nLet’s train and evaluate a logistic regression model.\n\n# Train Logistic Regression model\nlog_reg_model &lt;- train(Diabetes_binary ~ ., data = train_data, method = \"glm\", family = \"binomial\", trControl = trainControl(method = \"cv\", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE))\n\nWarning in train.default(x, y, weights = w, ...): The metric \"Accuracy\" was not\nin the result set. logLoss will be used instead.\n\n# Evaluate model performance\nlog_reg_model\n\nGeneralized Linear Model \n\n177577 samples\n    21 predictor\n     2 classes: 'No', 'Yes' \n\nNo pre-processing\nResampling: Cross-Validated (5 fold) \nSummary of sample sizes: 142061, 142061, 142061, 142062, 142063 \nResampling results:\n\n  logLoss  \n  0.3209772"
+  },
+  {
+    "objectID": "Modeling.html#classification-tree",
+    "href": "Modeling.html#classification-tree",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Classification Tree",
+    "text": "Classification Tree\nA classification tree is a type of decision tree that is used for classifying data into predefined classes. It works by splitting the data into subsets based on the value of input features, creating a tree-like model of decisions. Classification trees are easy to interpret and can handle both numerical and categorical data. They are useful for understanding the relationships between features and the target variable.\nLet’s train and evaluate a classification tree model.\n\n# Train Classification Tree model\ntree_model &lt;- train(Diabetes_binary ~ ., data = train_data, method = \"rpart\", trControl = trainControl(method = \"cv\", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE), tuneGrid = expand.grid(cp = seq(0.01, 0.1, by = 0.01)))\n\nWarning in train.default(x, y, weights = w, ...): The metric \"Accuracy\" was not\nin the result set. logLoss will be used instead.\n\n# Evaluate model performance\ntree_model\n\nCART \n\n177577 samples\n    21 predictor\n     2 classes: 'No', 'Yes' \n\nNo pre-processing\nResampling: Cross-Validated (5 fold) \nSummary of sample sizes: 142062, 142062, 142062, 142061, 142061 \nResampling results across tuning parameters:\n\n  cp    logLoss  \n  0.01  0.4037576\n  0.02  0.4037576\n  0.03  0.4037576\n  0.04  0.4037576\n  0.05  0.4037576\n  0.06  0.4037576\n  0.07  0.4037576\n  0.08  0.4037576\n  0.09  0.4037576\n  0.10  0.4037576\n\nlogLoss was used to select the optimal model using the smallest value.\nThe final value used for the model was cp = 0.1."
+  },
+  {
+    "objectID": "Modeling.html#random-forest",
+    "href": "Modeling.html#random-forest",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Random Forest",
+    "text": "Random Forest\nA Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees. Random Forests correct for decision trees’ habit of overfitting to their training set. They are robust and provide good performance on various types of data.\nLet’s train and evaluate a random forest model.\n\n# Reduce the number of trees and limit mtry\ntune_grid &lt;- expand.grid(\n  .mtry = sqrt(ncol(train_data) - 1), # Typically used heuristic\n  .splitrule = \"gini\",\n  .min.node.size = 5\n)\n\n# Train Random Forest model using ranger\nrf_model &lt;- train(\n  Diabetes_binary ~ ., \n  data = train_data, \n  method = \"ranger\", \n  trControl = trainControl(method = \"cv\", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE),\n  tuneGrid = tune_grid,\n  num.trees = 4 # Reduce the number of trees\n)\n\nWarning in train.default(x, y, weights = w, ...): The metric \"Accuracy\" was not\nin the result set. logLoss will be used instead.\n\n# Evaluate model performance\nrf_model\n\nRandom Forest \n\n177577 samples\n    21 predictor\n     2 classes: 'No', 'Yes' \n\nNo pre-processing\nResampling: Cross-Validated (5 fold) \nSummary of sample sizes: 142061, 142061, 142063, 142062, 142061 \nResampling results:\n\n  logLoss  \n  0.7137499\n\nTuning parameter 'mtry' was held constant at a value of 4.582576\n\nTuning parameter 'splitrule' was held constant at a value of gini\n\nTuning parameter 'min.node.size' was held constant at a value of 5"
+  },
+  {
+    "objectID": "Modeling.html#final-model-selection",
+    "href": "Modeling.html#final-model-selection",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Final Model Selection",
+    "text": "Final Model Selection\nCompare all three models and select the best one.\n\n# Compare models\nresults &lt;- resamples(list(Logistic = log_reg_model, Tree = tree_model, RF = rf_model))\nsummary(results)\n\n\nCall:\nsummary.resamples(object = results)\n\nModels: Logistic, Tree, RF \nNumber of resamples: 5 \n\nlogLoss \n              Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's\nLogistic 0.3202558 0.3202570 0.3208639 0.3209772 0.3212443 0.3222652    0\nTree     0.4037297 0.4037297 0.4037739 0.4037576 0.4037739 0.4037810    0\nRF       0.6642574 0.7130375 0.7168601 0.7137499 0.7228428 0.7517514    0\n\n# Select the best model\nbest_model &lt;- rf_model # Assuming Random Forest is the best based on the summary"
   }
 ]
