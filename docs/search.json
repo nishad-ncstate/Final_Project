@@ -89,5 +89,12 @@
     "title": "Modeling Diabetes Health Indicators",
     "section": "Final Model Selection",
     "text": "Final Model Selection\nCompare all three models and select the best one.\n\n# Compare models\nresults &lt;- resamples(list(Logistic = log_reg_model, Tree = tree_model, RF = rf_model))\nsummary(results)\n\n\nCall:\nsummary.resamples(object = results)\n\nModels: Logistic, Tree, RF \nNumber of resamples: 5 \n\nlogLoss \n              Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's\nLogistic 0.3202558 0.3202570 0.3208639 0.3209772 0.3212443 0.3222652    0\nTree     0.4037297 0.4037297 0.4037739 0.4037576 0.4037739 0.4037810    0\nRF       0.6642574 0.7130375 0.7168601 0.7137499 0.7228428 0.7517514    0\n\n# Select the best model\nbest_model &lt;- rf_model # Assuming Random Forest is the best based on the summary"
+  },
+  {
+    "objectID": "Modeling.html#log-loss-as-a-performance-metric",
+    "href": "Modeling.html#log-loss-as-a-performance-metric",
+    "title": "Modeling Diabetes Health Indicators",
+    "section": "Log Loss as a Performance Metric",
+    "text": "Log Loss as a Performance Metric\nLogarithmic Loss (Log Loss), also known as binary cross-entropy, is a performance metric used for evaluating the predictions of a classification model. Unlike accuracy, which simply measures the proportion of correct predictions, log loss takes into account the uncertainty of the predictions by penalizing false classifications with a score based on the confidence of the prediction. Specifically, it calculates the negative log likelihood of the true labels given the predicted probabilities. Log loss is particularly useful in binary classification problems because it provides a more nuanced evaluation of the model’s performance. While accuracy only considers whether the predicted class is correct, log loss penalizes predictions that are confident but wrong more severely than those that are less confident. This makes log loss a more sensitive and informative metric for assessing the quality of probabilistic predictions, especially in imbalanced datasets or when the costs of different types of misclassifications are not equal."
   }
 ]
