@@ -137,6 +137,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this section, we will build and evaluate predictive models to classify individuals based on the Diabetes Health Indicators dataset.</p>
 </section>
+<section id="log-loss-as-a-performance-metric" class="level2">
+<h2 class="anchored" data-anchor-id="log-loss-as-a-performance-metric">Log Loss as a Performance Metric</h2>
+<p>Logarithmic Loss (Log Loss), also known as binary cross-entropy, is a performance metric used for evaluating the predictions of a classification model. Unlike accuracy, which simply measures the proportion of correct predictions, log loss takes into account the uncertainty of the predictions by penalizing false classifications with a score based on the confidence of the prediction. Specifically, it calculates the negative log likelihood of the true labels given the predicted probabilities. Log loss is particularly useful in binary classification problems because it provides a more nuanced evaluation of the model’s performance. While accuracy only considers whether the predicted class is correct, log loss penalizes predictions that are confident but wrong more severely than those that are less confident. This makes log loss a more sensitive and informative metric for assessing the quality of probabilistic predictions, especially in imbalanced datasets or when the costs of different types of misclassifications are not equal.</p>
+</section>
 <section id="data-split" class="level2">
 <h2 class="anchored" data-anchor-id="data-split">Data Split</h2>
 <p>First, we split the data into training and testing sets.</p>

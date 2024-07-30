@@ -7,6 +7,7 @@ format: html
 
 This analysis aims to explore the Diabetes Health Indicators dataset to understand the relationships between various health indicators and the presence of diabetes. The ultimate goal is to use these insights to build predictive models.
 
+
 ## Data
 
 Let's load the dataset and perform initial exploration.
@@ -59,4 +60,4 @@ ggplot(data, aes(x = factor(HighBP), fill = factor(Diabetes_binary))) +
 
 ```
 
-Click here for the modeling page
+[Click here for the modeling page](https://nishad-ncstate.github.io/Final_Project/Modeling.html)
