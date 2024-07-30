@@ -1,0 +1,121 @@
+---
+title: "Modeling Diabetes Health Indicators"
+format: html
+---
+
+
+## Introduction
+
+In this section, we will build and evaluate predictive models to classify individuals based on the Diabetes Health Indicators dataset.
+
+## Data Split
+
+First, we split the data into training and testing sets.
+
+
+```{r}
+
+# Load the necessary libraries
+library(tidyverse)
+library(randomForest)
+library(caret)
+library(ranger)
+
+# Load the dataset
+data <- read.csv("C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv")
+
+# Convert Diabetes_binary to a factor with appropriate levels
+data$Diabetes_binary <- factor(data$Diabetes_binary, levels = c(0, 1), labels = c("No", "Yes"))
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Split the data
+train_index <- createDataPartition(data$Diabetes_binary, p = 0.7, list = FALSE)
+train_data <- data[train_index, ]
+test_data <- data[-train_index, ]
+```
+
+
+## Logistic Regression
+
+Logistic regression is a statistical model that is used to predict the probability of a binary outcome based on one or more predictor variables. It is particularly useful for binary classification problems, like predicting whether an individual has diabetes (Yes/No) based on various health indicators. The model estimates the probability that a given input point belongs to a specific class. This is done using the logistic function, which outputs a value between 0 and 1.
+
+Let's train and evaluate a logistic regression model.
+
+
+```{r}
+# Train Logistic Regression model
+log_reg_model <- train(Diabetes_binary ~ ., data = train_data, method = "glm", family = "binomial", trControl = trainControl(method = "cv", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE))
+
+# Evaluate model performance
+log_reg_model
+
+```
+
+
+## Classification Tree
+
+A classification tree is a type of decision tree that is used for classifying data into predefined classes. It works by splitting the data into subsets based on the value of input features, creating a tree-like model of decisions. Classification trees are easy to interpret and can handle both numerical and categorical data. They are useful for understanding the relationships between features and the target variable.
+
+Let's train and evaluate a classification tree model. 
+
+
+```{r}
+# Train Classification Tree model
+tree_model <- train(Diabetes_binary ~ ., data = train_data, method = "rpart", trControl = trainControl(method = "cv", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE), tuneGrid = expand.grid(cp = seq(0.01, 0.1, by = 0.01)))
+
+# Evaluate model performance
+tree_model
+
+
+```
+
+
+## Random Forest
+
+
+A Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees. Random Forests correct for decision trees' habit of overfitting to their training set. They are robust and provide good performance on various types of data.
+
+Let's train and evaluate a random forest model.
+
+
+```{r}
+# Reduce the number of trees and limit mtry
+tune_grid <- expand.grid(
+  .mtry = sqrt(ncol(train_data) - 1), # Typically used heuristic
+  .splitrule = "gini",
+  .min.node.size = 5
+)
+
+# Train Random Forest model using ranger
+rf_model <- train(
+  Diabetes_binary ~ ., 
+  data = train_data, 
+  method = "ranger", 
+  trControl = trainControl(method = "cv", number = 5, summaryFunction = mnLogLoss, classProbs = TRUE),
+  tuneGrid = tune_grid,
+  num.trees = 4 # Reduce the number of trees
+)
+
+# Evaluate model performance
+rf_model
+
+```
+
+
+## Final Model Selection 
+
+Compare all three models and select the best one.
+
+
+```{r}
+# Compare models
+results <- resamples(list(Logistic = log_reg_model, Tree = tree_model, RF = rf_model))
+summary(results)
+
+# Select the best model
+best_model <- rf_model # Assuming Random Forest is the best based on the summary
+
+```
+

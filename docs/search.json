@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "EDA.html",
+    "href": "EDA.html",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "",
+    "text": "This analysis aims to explore the Diabetes Health Indicators dataset to understand the relationships between various health indicators and the presence of diabetes. The ultimate goal is to use these insights to build predictive models."
+  },
+  {
+    "objectID": "EDA.html#introduction",
+    "href": "EDA.html#introduction",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "",
+    "text": "This analysis aims to explore the Diabetes Health Indicators dataset to understand the relationships between various health indicators and the presence of diabetes. The ultimate goal is to use these insights to build predictive models."
+  },
+  {
+    "objectID": "EDA.html#data",
+    "href": "EDA.html#data",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "Data",
+    "text": "Data\nLet’s load the dataset and perform initial exploration.\n\n# Load the necessary libraries\nlibrary(tidyverse)\n\nWarning: package 'ggplot2' was built under R version 4.4.1\n\n\nWarning: package 'dplyr' was built under R version 4.4.1\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n# Load the dataset\ndata &lt;- read.csv(\"C:/Users/karen/Downloads/diabetes_binary_health_indicators_BRFSS2015.csv\")\n\n# Display the first few rows of the dataset\nhead(data)\n\n  Diabetes_binary HighBP HighChol CholCheck BMI Smoker Stroke\n1               0      1        1         1  40      1      0\n2               0      0        0         0  25      1      0\n3               0      1        1         1  28      0      0\n4               0      1        0         1  27      0      0\n5               0      1        1         1  24      0      0\n6               0      1        1         1  25      1      0\n  HeartDiseaseorAttack PhysActivity Fruits Veggies HvyAlcoholConsump\n1                    0            0      0       1                 0\n2                    0            1      0       0                 0\n3                    0            0      1       0                 0\n4                    0            1      1       1                 0\n5                    0            1      1       1                 0\n6                    0            1      1       1                 0\n  AnyHealthcare NoDocbcCost GenHlth MentHlth PhysHlth DiffWalk Sex Age\n1             1           0       5       18       15        1   0   9\n2             0           1       3        0        0        0   0   7\n3             1           1       5       30       30        1   0   9\n4             1           0       2        0        0        0   0  11\n5             1           0       2        3        0        0   0  11\n6             1           0       2        0        2        0   1  10\n  Education Income\n1         4      3\n2         6      1\n3         4      8\n4         3      6\n5         5      4\n6         6      8"
+  },
+  {
+    "objectID": "EDA.html#data-cleaning-and-transformation",
+    "href": "EDA.html#data-cleaning-and-transformation",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "Data Cleaning and Transformation",
+    "text": "Data Cleaning and Transformation\nWe need to clean and transform the data for our analysis.\n\n# Convert relevant columns to factors\ndata &lt;- data %&gt;%\n  mutate(across(where(is.numeric), as.factor))\n\n# Check for missing values\nsum(is.na(data))\n\n[1] 0"
+  },
+  {
+    "objectID": "EDA.html#summary-statistics",
+    "href": "EDA.html#summary-statistics",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "Summary Statistics",
+    "text": "Summary Statistics\nLet’s generate summary statistics for the dataset.\n\n# Summary statistics for the dataset\nsummary(data)\n\n Diabetes_binary HighBP     HighChol   CholCheck       BMI         Smoker    \n 0:218334        0:144851   0:146089   0:  9470   27     : 24606   0:141257  \n 1: 35346        1:108829   1:107591   1:244210   26     : 20562   1:112423  \n                                                  24     : 19550             \n                                                  25     : 17146             \n                                                  28     : 16545             \n                                                  23     : 15610             \n                                                  (Other):139661             \n Stroke     HeartDiseaseorAttack PhysActivity Fruits     Veggies   \n 0:243388   0:229787             0: 61760     0: 92782   0: 47839  \n 1: 10292   1: 23893             1:191920     1:160898   1:205841  \n                                                                   \n                                                                   \n                                                                   \n                                                                   \n                                                                   \n HvyAlcoholConsump AnyHealthcare NoDocbcCost GenHlth      MentHlth     \n 0:239424          0: 12417      0:232326    1:45299   0      :175680  \n 1: 14256          1:241263      1: 21354    2:89084   2      : 13054  \n                                             3:75646   30     : 12088  \n                                             4:31570   5      :  9030  \n                                             5:12081   1      :  8538  \n                                                       3      :  7381  \n                                                       (Other): 27909  \n    PhysHlth      DiffWalk   Sex             Age        Education \n 0      :160052   0:211005   0:141974   9      :33244   1:   174  \n 30     : 19400   1: 42675   1:111706   10     :32194   2:  4043  \n 2      : 14764                         8      :30832   3:  9478  \n 1      : 11388                         7      :26314   4: 62750  \n 3      :  8495                         11     :23533   5: 69910  \n 5      :  7622                         6      :19819   6:107325  \n (Other): 31959                         (Other):87744             \n     Income     \n 8      :90385  \n 7      :43219  \n 6      :36470  \n 5      :25883  \n 4      :20135  \n 3      :15994  \n (Other):21594"
+  },
+  {
+    "objectID": "EDA.html#visualizations",
+    "href": "EDA.html#visualizations",
+    "title": "Exploratory Data Analysis of Diabetes Health Indicators",
+    "section": "Visualizations",
+    "text": "Visualizations\nLet’s create some visualizations to understand the relationships between variables.\n\n# Example visualization\nggplot(data, aes(x = factor(HighBP), fill = factor(Diabetes_binary))) +\n  geom_bar(position = \"dodge\") +\n  labs(title = \"High Blood Pressure vs Diabetes\", x = \"High Blood Pressure\", y = \"Count\", fill = \"Diabetes\")\n\n\n\n\n\n\n\n\nClick here for the modeling page"
+  }
+]
